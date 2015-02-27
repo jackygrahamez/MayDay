@@ -329,10 +329,14 @@ public class WizardActivity extends BaseFragmentActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if ((requestCode == PICK_CONTACT_REQUEST_ID) && (resultCode == RESULT_OK)) {
-            Context context = getApplicationContext();
-            contactPickerFragment.onActivityResult(requestCode, resultCode, data, context);
-        }
+//if ((requestCode == PICK_CONTACT_REQUEST_ID) && (resultCode == RESULT_OK)) {
+//Context context = getApplicationContext();
+//contactPickerFragment.onActivityResult(requestCode, resultCode, data, context);
+//}
+
+        Log.i("", "Called from WizardActivity");
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private Runnable runnableInteractive = new Runnable() {

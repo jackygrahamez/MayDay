@@ -28,18 +28,26 @@ public class ContactEditTexts {
     private Context context;
 
     public ContactEditTexts(FragmentManager fragmentManager, final Button bActionButton,
-                            Context context) {
+                            Context context, EditText contact1, EditText contact2, EditText contact3) {
         this.context = context;
         Log.e(">>>>", "onActivityCreated fragmentManager "+fragmentManager);
         TextWatcher phoneNumberTextWatcher = phoneNumberWatcher(bActionButton);
-        List<Integer> ids = Arrays.asList(first_contact, second_contact, third_contact);
-        for (Integer id : ids) {
-            Log.e(">>>>", "onActivityCreated id "+id);
+        //List<Integer> ids = Arrays.asList(first_contact, second_contact, third_contact);
+        //for (Integer id : ids) {
+        //Log.e(">>>>", "onActivityCreated id "+id);
 
-            EditText editText = findEditText(id, fragmentManager);
-            editText.addTextChangedListener(phoneNumberTextWatcher);
-            contacts.add(editText);
-        }
+        //EditText editText = findEditText(id, fragmentManager);
+        //editText.addTextChangedListener(phoneNumberTextWatcher);
+        //contacts.add(editText);
+        //}
+
+        //EditText editText = findEditText(id, fragmentManager);
+        contact1.addTextChangedListener(phoneNumberTextWatcher);
+        contact2.addTextChangedListener(phoneNumberTextWatcher);
+        contact3.addTextChangedListener(phoneNumberTextWatcher);
+        contacts.add(contact1);
+        contacts.add(contact2);
+        contacts.add(contact3);
     }
 
     private EditText findEditText(int fragmentId, FragmentManager fragmentManager) {

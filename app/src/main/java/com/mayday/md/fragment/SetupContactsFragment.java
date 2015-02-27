@@ -1,8 +1,12 @@
 package com.mayday.md.fragment;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.DisplayMetrics;
@@ -12,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,10 +40,16 @@ import com.mayday.md.model.Page;
 import com.mayday.md.model.PageItem;
 import com.mayday.md.model.SMSSettings;
 
+import static android.content.Intent.ACTION_GET_CONTENT;
+import static android.provider.ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE;
+
 /**
  * Created by aoe on 12/11/13.
  */
 public class SetupContactsFragment extends Fragment {
+
+    private static final int PICK_CONTACT_REQUEST_ID_1 = 101, PICK_CONTACT_REQUEST_ID_2 = 102, PICK_CONTACT_REQUEST_ID_3 = 103;
+
     private ContactEditTexts contactEditTexts;
 
     private static final String PAGE_ID = "page_id";
@@ -53,6 +65,9 @@ public class SetupContactsFragment extends Fragment {
 
     Page currentPage;
     PageItemAdapter pageItemAdapter;
+
+    EditText etContact1, etContact2, etContact3;
+    ImageButton ibContact1, ibContact2, ibContact3;
 
     public static SetupContactsFragment newInstance(String pageId, int parentActivity) {
         SetupContactsFragment f = new SetupContactsFragment();
@@ -131,9 +146,59 @@ public class SetupContactsFragment extends Fragment {
             }
         });
 
+        etContact1 = (EditText) view.findViewById(R.id.contact_edit_text1);
+        etContact2 = (EditText) view.findViewById(R.id.contact_edit_text2);
+        etContact3 = (EditText) view.findViewById(R.id.contact_edit_text3);
+
+        ibContact1 = (ImageButton) view.findViewById(R.id.contact_picker_button1);
+        ibContact2 = (ImageButton) view.findViewById(R.id.contact_picker_button2);
+        ibContact3 = (ImageButton) view.findViewById(R.id.contact_picker_button3);
+
+        ibContact1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int wizardState = ApplicationSettings.getWizardState(getActivity());
+//            	 if(wizardState != AppConstants.WIZARD_FLAG_HOME_READY){
+                AppConstants.IS_BACK_BUTTON_PRESSED = true;
+                AppConstants.IS_BACK_BUTTON_PRESSED = true;
+//            	 }
+                launchContactPicker(v, PICK_CONTACT_REQUEST_ID_1);
+            }
+        });
+
+        ibContact2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int wizardState = ApplicationSettings.getWizardState(getActivity());
+//            	 if(wizardState != AppConstants.WIZARD_FLAG_HOME_READY){
+                AppConstants.IS_BACK_BUTTON_PRESSED = true;
+                AppConstants.IS_BACK_BUTTON_PRESSED = true;
+//            	 }
+                launchContactPicker(v, PICK_CONTACT_REQUEST_ID_2);
+            }
+        });
+
+        ibContact3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int wizardState = ApplicationSettings.getWizardState(getActivity());
+//            	 if(wizardState != AppConstants.WIZARD_FLAG_HOME_READY){
+                AppConstants.IS_BACK_BUTTON_PRESSED = true;
+                AppConstants.IS_BACK_BUTTON_PRESSED = true;
+//            	 }
+                launchContactPicker(v, PICK_CONTACT_REQUEST_ID_3);
+            }
+        });
+
 //        initializeViews(view);
 
         return view;
+    }
+
+    public void launchContactPicker(View view, int requestCode) {
+        Intent contactPickerIntent = new Intent(ACTION_GET_CONTENT);
+        contactPickerIntent.setType(CONTENT_ITEM_TYPE);
+        startActivityForResult(contactPickerIntent, requestCode);
     }
 
     @Override
@@ -145,7 +210,7 @@ public class SetupContactsFragment extends Fragment {
             metrics = new DisplayMetrics();
             activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-            contactEditTexts = new ContactEditTexts(getChildFragmentManager(), bAction, activity);
+            contactEditTexts = new ContactEditTexts(getChildFragmentManager(), bAction, activity, etContact1, etContact2, etContact3);
 
             SMSSettings currentSettings = SMSSettings.retrieve(activity);
             if(currentSettings.isConfigured()) {
@@ -189,6 +254,80 @@ public class SetupContactsFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("","onActivityResult SetupContactsFragments");
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e("ContactPickerFragment", "onActivityResult requestCode "+requestCode);
+        Log.e("ContactPickerFragment", "onActivityResult resultCode "+resultCode);
+        Log.e("ContactPickerFragment", "onActivityResult data "+data);
+
+        if (resultCode == Activity.RESULT_OK) {
+
+            ContentResolver cr = getActivity().getContentResolver();
+            Cursor cur = cr.query(data.getData(), null, null, null, null);
+            String phone = "";
+            if (cur.getCount() > 0) {
+                while (cur.moveToNext()) {
+                    String id = cur.getString(
+                            cur.getColumnIndex(ContactsContract.Contacts._ID));
+                    Log.e("ContactPickerFragment", "onActivityResult id "+id);
+                    String name = cur.getString(
+                            cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                    Log.e("ContactPickerFragment", "onActivityResult name "+name);
+
+                    Cursor phones = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                            ContactsContract.CommonDataKinds.Phone._ID + " = " + id, null, null);
+                    while (phones.moveToNext() && (phone == null || "".equals(phone))) {
+                        phone = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    }
+                    phones.close();
+
+                    if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                        //Query phone here.  Covered next
+
+
+
+
+
+
+                        /*
+                        Cursor pCur = cr.query(
+                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                null,
+                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",
+                                new String[]{id}, null);
+                        Log.e("WizardActivity", "onActivityResult pCur "+pCur);
+                        while (pCur.moveToNext()) {
+                            // Do something with phones
+                            phone = pCur.getString(
+                                    pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            Log.e("ContactPickerFragment", "onActivityResult phone "+phone);
+                        }
+                        pCur.close();
+                        */
+                    }
+                }
+            }
+
+            Log.e("ContactPickerFragment", "onActivityResult phone "+phone);
+            phone = phone==null?"":phone.trim();
+
+            switch(requestCode) {
+                case PICK_CONTACT_REQUEST_ID_1:
+                    etContact1.setText(phone);
+                    break;
+                case PICK_CONTACT_REQUEST_ID_2:
+                    etContact2.setText(phone);
+                    break;
+                case PICK_CONTACT_REQUEST_ID_3:
+                    etContact3.setText(phone);
+                    break;
+                default:
+                    return;
+            }
+        }
+    }
 
     private void displaySettings(SMSSettings settings) {
         contactEditTexts.maskPhoneNumbers();

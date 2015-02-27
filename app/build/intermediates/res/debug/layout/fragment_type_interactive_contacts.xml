@@ -66,11 +66,29 @@
                     android:text="@string/first_contact"
                     style="@style/contact_number" />
 
-                <fragment
+                <EditText
+                    android:id="@+id/contact_edit_text1"
+                    android:layout_height="52dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:hint="@string/contact_hint_text"
+                    android:textSize="20sp"
+                    android:inputType="phone" />
+
+                <ImageButton
+                    android:id="@+id/contact_picker_button1"
+                    android:layout_height="48dp"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0"
+                    android:src="@drawable/socialperson"
+                    android:contentDescription="@string/choose_contact"
+                    style="@style/contact_select_button" />
+
+                <!--<fragment
                     android:name="com.mayday.md.common.ContactPickerFragment"
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
-                    android:id="@+id/first_contact" />
+                    android:id="@+id/first_contact" />-->
             </LinearLayout>
 
             <LinearLayout
@@ -86,11 +104,29 @@
                     android:text="@string/second_contact"
                     style="@style/contact_number" />
 
-                <fragment
+                <EditText
+                    android:id="@+id/contact_edit_text2"
+                    android:layout_height="52dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:hint="@string/contact_hint_text"
+                    android:textSize="20sp"
+                    android:inputType="phone" />
+
+                <ImageButton
+                    android:id="@+id/contact_picker_button2"
+                    android:layout_height="48dp"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0"
+                    android:src="@drawable/socialperson"
+                    android:contentDescription="@string/choose_contact"
+                    style="@style/contact_select_button" />
+
+                <!--<fragment
                     android:name="com.mayday.md.common.ContactPickerFragment"
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
-                    android:id="@+id/second_contact" />
+                    android:id="@+id/second_contact" />-->
             </LinearLayout>
 
             <LinearLayout
@@ -103,14 +139,33 @@
                 <TextView
                     android:layout_height="fill_parent"
                     android:layout_width="wrap_content"
+                    android:layout_weight="0"
                     android:text="@string/third_contact"
                     style="@style/contact_number" />
 
-                <fragment
+                <EditText
+                    android:id="@+id/contact_edit_text3"
+                    android:layout_height="52dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:hint="@string/contact_hint_text"
+                    android:textSize="20sp"
+                    android:inputType="phone" />
+
+                <ImageButton
+                    android:id="@+id/contact_picker_button3"
+                    android:layout_height="48dp"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0"
+                    android:src="@drawable/socialperson"
+                    android:contentDescription="@string/choose_contact"
+                    style="@style/contact_select_button" />
+
+                <!--<fragment
                     android:name="com.mayday.md.common.ContactPickerFragment"
                     android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
-                    android:id="@+id/third_contact" />
+                    android:id="@+id/third_contact" />-->
             </LinearLayout>
 
             <Button
@@ -140,5 +195,4 @@
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:layout_weight="1" />
-</LinearLayout>
-<!-- From: file:/Users/jshultz/Projects/MayDay/app/src/main/res/layout/fragment_type_interactive_contacts.xml -->
+</LinearLayout><!-- From: file:/Users/jshultz/Projects/MayDay/app/src/main/res/layout/fragment_type_interactive_contacts.xml -->
